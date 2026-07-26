@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-paper text-ink-high font-body antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+  }
+
+  ::selection {
+    background: rgba(226, 121, 61, 0.2);
+  }
+
+  *:focus-visible {
+    outline: 2px solid rgba(226, 121, 61, 0.6);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .surface-card {
+    @apply relative rounded-2xl border border-line bg-card shadow-card;
+  }
+
+  .fine-divider {
+    @apply h-px w-full bg-line;
+  }
+
+  .btn-orange {
+    @apply inline-flex items-center justify-center rounded-full bg-orange px-6 py-3
+      font-body text-sm font-semibold text-white shadow-card transition-all duration-200
+      hover:bg-orange-deep active:scale-[0.98];
+  }
+
+  .btn-navy {
+    @apply inline-flex items-center justify-center rounded-full bg-navy px-6 py-3
+      font-body text-sm font-semibold text-white shadow-card transition-all duration-200
+      hover:bg-navy-deep active:scale-[0.98];
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center rounded-full border border-line bg-white px-6 py-3
+      font-body text-sm font-medium text-ink-high transition-all duration-200
+      hover:border-navy/30 hover:bg-navy/5 active:scale-[0.98];
+  }
+
+  .btn-ghost-danger {
+    @apply inline-flex items-center justify-center rounded-full border border-signal-danger/30
+      bg-signal-danger/5 px-5 py-2.5 font-body text-sm font-medium text-signal-danger
+      transition-all duration-200 hover:bg-signal-danger/10 hover:border-signal-danger/50;
+  }
+
+  .data-label {
+    @apply font-mono text-[11px] uppercase tracking-[0.16em] text-ink-low;
+  }
+}

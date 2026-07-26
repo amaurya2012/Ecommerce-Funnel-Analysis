@@ -1,0 +1,8 @@
+node_modules/
+dist/
+*.log
+.env
+.env.local
+backend/user_behavior_logs.csv
+__pycache__/
+analytics/output/
