@@ -75,7 +75,7 @@ export const PRODUCTS = [
     id: 'p-107',
     name: 'Tinted Horn-Rim Sunglasses',
     price: 9500,
-    category: 'Accessories',
+    category: 'Menswear',
     description:
       'Hand-polished acetate frames with gradient tinted lenses and a subtle horn-rim taper. Comes with a suede fold case.',
     accent: '#5B4630',
