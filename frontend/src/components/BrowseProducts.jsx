@@ -1,8 +1,15 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { PRODUCTS } from '../data/products.js';
+import { PRODUCTS, getRatingFor } from '../data/products.js';
 import Hero from './Hero.jsx';
 import CategoryTiles from './CategoryTiles.jsx';
 import ProductCard from './ProductCard.jsx';
+
+const SORT_OPTIONS = [
+  { value: 'default', label: 'Sort: Featured' },
+  { value: 'price-asc', label: 'Price: Low to High' },
+  { value: 'price-desc', label: 'Price: High to Low' },
+  { value: 'rating-desc', label: 'Rating: High to Low' },
+];
 
 export default function BrowseProducts({
   onSelectProduct,
@@ -13,6 +20,7 @@ export default function BrowseProducts({
   onClearWishlistOnly,
 }) {
   const [activeCategory, setActiveCategory] = useState('All');
+  const [sortBy, setSortBy] = useState('default');
   const gridRef = useRef(null);
 
   const visibleProducts = useMemo(() => {
@@ -32,8 +40,16 @@ export default function BrowseProducts({
       );
     }
 
+    if (sortBy === 'price-asc') {
+      list = [...list].sort((a, b) => a.price - b.price);
+    } else if (sortBy === 'price-desc') {
+      list = [...list].sort((a, b) => b.price - a.price);
+    } else if (sortBy === 'rating-desc') {
+      list = [...list].sort((a, b) => getRatingFor(b.id).rating - getRatingFor(a.id).rating);
+    }
+
     return list;
-  }, [activeCategory, searchQuery, wishlist, wishlistOnly]);
+  }, [activeCategory, searchQuery, wishlist, wishlistOnly, sortBy]);
 
   function scrollToGrid() {
     gridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -60,10 +76,10 @@ export default function BrowseProducts({
       )}
 
       <div ref={gridRef} className="mt-10 scroll-mt-24 sm:mt-14">
-        <div className="mb-5 flex flex-wrap items-end justify-between gap-2 sm:mb-6">
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-3 sm:mb-6">
           <h2 className="text-xl font-semibold text-ink-high sm:text-2xl">{heading}</h2>
 
-          <div className="flex gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             {wishlistOnly && (
               <button
                 type="button"
@@ -82,6 +98,18 @@ export default function BrowseProducts({
                 Clear filter
               </button>
             )}
+            <select
+              value={sortBy}
+              onChange={(event) => setSortBy(event.target.value)}
+              className="rounded-full border border-line bg-card px-3 py-1.5 font-body text-xs font-medium text-ink-high outline-none sm:text-sm"
+              aria-label="Sort products"
+            >
+              {SORT_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 

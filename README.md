@@ -97,6 +97,18 @@ Reads `backend/user_behavior_logs.csv` and writes three charts plus a full markd
 `analytics/output/`. See `analytics/README.md` for details on how session funnel depth is derived
 from the raw event log.
 
+### 5. Backend test suite
+
+```bash
+cd backend
+npm install
+npm test
+```
+
+34 Jest tests across three suites: CSV escaping and file-writing (`csvLogger.test.js`), payload
+validation (`validation.test.js`), and the Express routes via supertest (`server.test.js`). The
+route tests mock `csvLogger` so the real telemetry log is never touched by a test run.
+
 ## Telemetry schema
 
 Every row in `user_behavior_logs.csv`:

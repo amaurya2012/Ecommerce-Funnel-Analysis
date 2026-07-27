@@ -1,12 +1,34 @@
-import React from 'react';
-import { ArrowLeft, LogOut } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, LogOut, Minus, Plus } from 'lucide-react';
 import { formatPrice, getRatingFor } from '../data/products.js';
 import ProductArt from './ProductArt.jsx';
 import StarRating from './StarRating.jsx';
+import RelatedProducts from './RelatedProducts.jsx';
 
-export default function ProductDetail({ product, onAddToCart, onAbandon, onBack }) {
+const MAX_QUANTITY = 10;
+
+export default function ProductDetail({ product, onAddToCart, onAbandon, onBack, onSelectProduct }) {
+  const [quantity, setQuantity] = useState(1);
+
   if (!product) return null;
   const { rating, reviews } = getRatingFor(product.id);
+
+  function decrement() {
+    setQuantity((q) => Math.max(1, q - 1));
+  }
+
+  function increment() {
+    setQuantity((q) => Math.min(MAX_QUANTITY, q + 1));
+  }
+
+  function handleAddToCart() {
+    onAddToCart(quantity);
+  }
+
+  function handleSelectRelated(productId) {
+    setQuantity(1);
+    onSelectProduct(productId);
+  }
 
   return (
     <section>
@@ -16,7 +38,7 @@ export default function ProductDetail({ product, onAddToCart, onAbandon, onBack 
         className="mb-5 inline-flex items-center gap-1.5 text-sm text-ink-mid transition-colors hover:text-orange sm:mb-6"
       >
         <ArrowLeft size={14} strokeWidth={2} />
-        Back to Browsing
+        Back to browsing
       </button>
 
       <p className="data-label mb-3">step 02 · view item details</p>
@@ -45,9 +67,36 @@ export default function ProductDetail({ product, onAddToCart, onAbandon, onBack 
 
           <div className="fine-divider my-6 sm:my-7" />
 
+          <div className="mb-5">
+            <p className="data-label mb-2">Quantity</p>
+            <div className="inline-flex items-center rounded-full border border-line bg-card">
+              <button
+                type="button"
+                onClick={decrement}
+                disabled={quantity <= 1}
+                aria-label="Decrease quantity"
+                className="flex h-9 w-9 items-center justify-center text-ink-high transition-colors hover:text-orange disabled:cursor-not-allowed disabled:text-ink-low"
+              >
+                <Minus size={14} strokeWidth={2.5} />
+              </button>
+              <span className="w-8 text-center font-mono text-sm font-semibold text-ink-high">
+                {quantity}
+              </span>
+              <button
+                type="button"
+                onClick={increment}
+                disabled={quantity >= MAX_QUANTITY}
+                aria-label="Increase quantity"
+                className="flex h-9 w-9 items-center justify-center text-ink-high transition-colors hover:text-orange disabled:cursor-not-allowed disabled:text-ink-low"
+              >
+                <Plus size={14} strokeWidth={2.5} />
+              </button>
+            </div>
+          </div>
+
           <div className="flex flex-col gap-3 sm:flex-row">
-            <button type="button" onClick={onAddToCart} className="btn-orange w-full sm:w-auto">
-              Add to Cart
+            <button type="button" onClick={handleAddToCart} className="btn-orange w-full sm:w-auto">
+              Add {quantity > 1 ? `${quantity} ` : ''}to Cart
             </button>
             <button
               type="button"
@@ -63,6 +112,8 @@ export default function ProductDetail({ product, onAddToCart, onAbandon, onBack 
           </p>
         </div>
       </div>
+
+      <RelatedProducts currentProduct={product} onSelectProduct={handleSelectRelated} />
     </section>
   );
 }

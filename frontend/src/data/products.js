@@ -3,7 +3,7 @@ export const PRODUCTS = [
     id: 'p-101',
     name: 'Meridian Wool Overcoat',
     price: 5400,
-    category: "Womenswear",
+    category: 'Womenswear',
     description:
       'A single-breasted overcoat cut from a heavyweight wool blend. Structured shoulders, half-canvassed chest, and a hand-finished notch lapel built for a decade of winters.',
     accent: '#1F3A5F',
@@ -27,7 +27,7 @@ export const PRODUCTS = [
     id: 'p-103',
     name: 'Aterra Leather Weekender',
     price: 22500,
-    category: "Womenswear",
+    category: 'Womenswear',
     description:
       'Full-grain leather weekender with a waxed canvas lining and brass-finished hardware, sized for a change of clothes, a laptop sleeve, and a dopp kit.',
     accent: '#7A4A28',
@@ -39,7 +39,7 @@ export const PRODUCTS = [
     id: 'p-104',
     name: 'Nocturne Cashmere Scarf',
     price: 8955,
-    category: "Womenswear",
+    category: 'Womenswear',
     description:
       'Two-ply cashmere scarf, hand-finished with a fringed edge. Woven in a small mill that has kept the same loom tension for three generations.',
     accent: '#6B5B45',
@@ -147,7 +147,7 @@ export const PRODUCTS = [
     id: 'p-113',
     name: 'Wildflower Wrap Dress',
     price: 990,
-    category: "Womenswear",
+    category: 'Womenswear',
     description:
       'A floral spaghetti-strap wrap dress in breathable cotton voile. Cut with a fitted bodice and a soft flare through the skirt, easy to dress up or down.',
     accent: '#7A5A6B',
@@ -159,7 +159,7 @@ export const PRODUCTS = [
     id: 'p-114',
     name: 'Vermillion Silk Saree',
     price: 18500,
-    category: "Womenswear",
+    category: 'Womenswear',
     description:
       'A handwoven pure silk saree in a deep vermillion tone with a contrast zari border. Comes with an unstitched matching blouse piece.',
     accent: '#8B2E2E',
@@ -168,38 +168,44 @@ export const PRODUCTS = [
     image: 'https://images.unsplash.com/photo-1619516388835-2b60acc4049e?w=500&q=80&auto=format&fit=crop',
   },
   {
-  id: 'p-201',
-  name: 'Minimalist Leather Messenger Bag',
-  category: 'New-Arrivals',
-  price: 18500,
-  rating: 4.8,
-  image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=600&auto=format&fit=crop',
-  art: 'bag',
-  accent: 'stone'
-},
-{
-  id: 'p-202',
-  name: 'Aurelle Signature Knit Vest',
-  category: 'New-Arrivals',
-  price: 8900,
-  rating: 4.6,
-  image: 'https://images.unsplash.com/photo-1614975058789-41316d0e2e9c?q=80&w=600&auto=format&fit=crop',
-  art: 'apparel',
-  accent: 'amber'
-},
-{
-  id: 'p-203',
-  name: 'Lucent Suede Chelsea Boots',
-  category: 'New-Arrivals',
-  price: 24500,
-  rating: 4.9,
-  image: 'https://images.unsplash.com/photo-1608256246200-53e635b5b65f?q=80&w=600&auto=format&fit=crop',
-  art: 'footwear',
-  accent: 'navy'
-}
+    id: 'p-201',
+    name: 'Minimalist Leather Messenger Bag',
+    category: 'New-Arrivals',
+    price: 18500,
+    rating: 4.2,
+    description:
+      'A structured leather messenger bag with a single flap closure and an adjustable cross-body strap, sized for a 14-inch laptop.',
+    image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?q=80&w=600&auto=format&fit=crop',
+    art: 'bag',
+    accent: '#8A8578',
+  },
+  {
+    id: 'p-202',
+    name: 'Aurelle Signature Knit Vest',
+    category: 'New-Arrivals',
+    price: 8900,
+    rating: 3.9,
+    description:
+      'A ribbed merino wool vest cut for a close, layerable fit. Wear it over a shirt or on its own in shoulder-season weather.',
+    image: 'https://images.unsplash.com/photo-1614975058789-41316d0e2e9c?q=80&w=600&auto=format&fit=crop',
+    art: 'shirt',
+    accent: '#C9A227',
+  },
+  {
+    id: 'p-203',
+    name: 'Lucent Suede Chelsea Boots',
+    category: 'New-Arrivals',
+    price: 24500,
+    rating: 4.0,
+    description:
+      'Suede Chelsea boots with elastic side gussets and a leather pull tab, finished on a durable Goodyear-welted sole.',
+    image: 'https://images.unsplash.com/photo-1608256246200-53e635b5b65f?q=80&w=600&auto=format&fit=crop',
+    art: 'loafers',
+    accent: '#1F3A5F',
+  },
 ];
 
-export const CATEGORIES = ['All', 'Menswear', 'Watches', 'Footwear', 'Accessories', 'Womenswear'];
+export const CATEGORIES = ['All', 'Menswear', 'Womenswear', 'Watches', 'Footwear', 'Accessories', 'New-Arrivals'];
 
 export function getProductById(id) {
   return PRODUCTS.find((product) => product.id === id) || null;
@@ -213,3 +219,27 @@ export function formatPrice(value) {
   }).format(value);
 }
 
+/**
+ * Returns a {rating, reviews} pair for a product. If the product has a
+ * manually set `rating` field, that value is used as-is; otherwise a
+ * rating is deterministically derived from the id so it stays stable
+ * across renders. The review count is always derived from the id since
+ * it isn't part of the manually curated data.
+ */
+export function getRatingFor(productId) {
+  const product = getProductById(productId);
+
+  let hash = 0;
+  for (let i = 0; i < productId.length; i += 1) {
+    hash = (hash * 31 + productId.charCodeAt(i)) >>> 0;
+  }
+
+  const rating =
+    product && typeof product.rating === 'number'
+      ? Math.round(product.rating * 10) / 10
+      : Math.round((4.2 + (hash % 8) / 10) * 10) / 10;
+
+  const reviews = 60 + (hash % 200);
+
+  return { rating, reviews };
+}

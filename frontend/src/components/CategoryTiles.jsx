@@ -1,18 +1,19 @@
 import React from 'react';
-import { Shirt, Watch, Footprints, Gem, Sparkles } from 'lucide-react';
+import { Shirt, Watch, Footprints, Gem, Sparkles, Star } from 'lucide-react';
 
 const TILES = [
-  {category: 'All', label: 'All Products', Icon: Sparkles },
+  { category: 'All', label: 'All Products', Icon: Sparkles },
   { category: 'Menswear', label: "Men's", Icon: Shirt },
-  { category: 'Womenswear', label: "Women's", Icon: Shirt},
-  { category: 'Watches', label: 'Timepieces', Icon: Watch },
-  { category: 'Footwear', label: 'Footwear', Icon: Footprints },
+  { category: 'Womenswear', label: "Women's", Icon: Shirt },
+  { category: 'Watches', label: 'Time pieces', Icon: Watch },
+  { category: 'Footwear', label: 'Foot wear', Icon: Footprints },
   { category: 'Accessories', label: 'Accessories', Icon: Gem },
+  { category: 'New-Arrivals', label: 'New Arrivals', Icon: Star },
 ];
 
 export default function CategoryTiles({ activeCategory, onSelectCategory }) {
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5">
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
       {TILES.map(({ category, label, Icon }) => {
         const isActive = activeCategory === category;
         return (
@@ -21,26 +22,12 @@ export default function CategoryTiles({ activeCategory, onSelectCategory }) {
             type="button"
             onClick={() => onSelectCategory(isActive ? 'All' : category)}
             className={[
-              'flex items-center justify-center gap-3 rounded-xl px-5 py-4 transition-all duration-300 border text-center group w-full shadow-sm',
-              isActive 
-                ? 'bg-navy border-orange text-white shadow-md' 
-                : 'bg-navy/90 border-transparent hover:bg-navy text-white/90'
+              'flex items-center gap-3 rounded-xl px-4 py-4 text-left transition-all duration-200 sm:py-5',
+              isActive ? 'bg-navy shadow-card-hover' : 'bg-navy/90 hover:bg-navy',
             ].join(' ')}
           >
-            <Icon 
-              size={17} 
-              strokeWidth={isActive ? 2 : 1.5} 
-              className={[
-                'shrink-0 transition-colors duration-300 text-orange',
-              ].join(' ')} 
-            />
-            
-            <span 
-              className={[
-                'font-sans text-xs sm:text-sm tracking-wide transition-colors duration-300 text-white',
-                isActive ? 'font-semibold' : 'font-medium text-white/90 group-hover:text-white'
-              ].join(' ')}
-            >
+            <Icon size={18} strokeWidth={1.5} className="shrink-0 text-orange" />
+            <span className="font-body text-xs font-semibold uppercase tracking-wide text-white sm:text-sm">
               {label}
             </span>
           </button>
