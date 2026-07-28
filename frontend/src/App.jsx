@@ -6,6 +6,8 @@ import ProductDetail from './components/ProductDetail.jsx';
 import CartOverview from './components/CartOverview.jsx';
 import CheckoutConfirmation from './components/CheckoutConfirmation.jsx';
 import Toast from './components/Toast.jsx';
+import InfoModal from './components/InfoModal.jsx';
+import { AboutContent, FaqContent, ContactContent } from './components/InfoContent.jsx';
 import { useTelemetryContext } from './context/TelemetryContext.jsx';
 import { getProductById, formatPrice } from './data/products.js';
 
@@ -27,6 +29,7 @@ export default function App() {
   const [wishlist, setWishlist] = useState(() => new Set());
   const [wishlistOnly, setWishlistOnly] = useState(false);
   const [toast, setToast] = useState({ visible: false, message: '' });
+  const [activeInfoPanel, setActiveInfoPanel] = useState(null);
 
   useEffect(() => {
     logTransition('entry', VIEWS.BROWSE, 'view');
@@ -172,10 +175,49 @@ export default function App() {
 
       <footer className="mx-auto max-w-6xl px-4 pb-8 pt-4 sm:px-6 sm:pb-10 md:px-10">
         <div className="fine-divider mb-4" />
-        <p className="data-label text-center text-[9px] leading-relaxed sm:text-[11px]">
-          © 2026 AURELLE. All Rights Reserved.
+
+        <div className="mb-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          <button
+            type="button"
+            onClick={() => setActiveInfoPanel('about')}
+            className="text-xs font-medium text-ink-mid transition-colors hover:text-orange sm:text-sm"
+          >
+            About
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveInfoPanel('faq')}
+            className="text-xs font-medium text-ink-mid transition-colors hover:text-orange sm:text-sm"
+          >
+            FAQ
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveInfoPanel('contact')}
+            className="text-xs font-medium text-ink-mid transition-colors hover:text-orange sm:text-sm"
+          >
+            Contact
+          </button>
+        </div>
+
+        <p className="text-center text-xs font-medium text-ink-mid">
+          AURELLE | © 2026 All Rights Reserved
+        </p>
+
+        <p className="data-label mt-4 text-center text-[9px] leading-relaxed sm:text-[11px]">
+          every transition streams to user_behavior_logs.csv for funnel analysis
         </p>
       </footer>
+
+      <InfoModal title="About AURELLE" isOpen={activeInfoPanel === 'about'} onClose={() => setActiveInfoPanel(null)}>
+        <AboutContent />
+      </InfoModal>
+      <InfoModal title="Frequently Asked Questions" isOpen={activeInfoPanel === 'faq'} onClose={() => setActiveInfoPanel(null)}>
+        <FaqContent />
+      </InfoModal>
+      <InfoModal title="Contact Us" isOpen={activeInfoPanel === 'contact'} onClose={() => setActiveInfoPanel(null)}>
+        <ContactContent />
+      </InfoModal>
 
       <Toast
         message={toast.message}
