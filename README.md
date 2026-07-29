@@ -2,9 +2,10 @@
 
 An end-to-end telemetry pipeline: a simulated premium boutique storefront (React + Tailwind, light
 navy/champagne theme) streams every step transition to a Node/Express backend, which appends each
-event as a row in `user_behavior_logs.csv`. A traffic simulator can generate 200 realistic sessions
+event as a row in `user_behavior_logs.csv`. Every session is also randomly assigned an A/B test
+variant on the "Add to Cart" button. A traffic simulator can generate thousands of realistic sessions
 with proper conversion drop-off at each stage, and a Python analytics module turns that raw log into
-funnel charts, device-level conversion rates, and a written report.
+funnel charts, device-level conversion rates, an A/B significance test, and a written report.
 
 ## Directory structure
 
@@ -43,6 +44,7 @@ ecommerce-funnel-analysis/
 │   └── package.json
 ├── analytics/                 Python funnel analysis
 │   ├── funnel_engine.py
+│   ├── ab_testing.py
 │   ├── generate_report.py
 │   ├── requirements.txt
 │   └── output/                (generated: charts + report)
@@ -82,8 +84,9 @@ npm install
 node simulate_traffic.js
 ```
 
-Fires 200 synthetic sessions with nested conversion rates (100% browse → 70% product view → 40%
-cart → 15% checkout) and prints a funnel summary to the terminal when done.
+Fires 3,000 synthetic sessions with nested conversion rates (100% browse → 70% product view, then
+an A/B split at the "Add to Cart" vs "Add to Bag" button, then ~37.5% of carts check out) and prints
+a funnel + variant summary to the terminal when done.
 
 ### 4. Analytics report (run after there's data in the CSV)
 
@@ -93,9 +96,10 @@ pip install -r requirements.txt
 python generate_report.py
 ```
 
-Reads `backend/user_behavior_logs.csv` and writes three charts plus a full markdown report to
-`analytics/output/`. See `analytics/README.md` for details on how session funnel depth is derived
-from the raw event log.
+Reads `backend/user_behavior_logs.csv` and writes four charts (funnel, device conversion,
+abandonment, and A/B test) plus a full markdown report to `analytics/output/`. See
+`analytics/README.md` for details on how session funnel depth is derived from the raw event log,
+and how the A/B significance test is computed.
 
 ### 5. Backend test suite
 
@@ -105,7 +109,7 @@ npm install
 npm test
 ```
 
-34 Jest tests across three suites: CSV escaping and file-writing (`csvLogger.test.js`), payload
+39 Jest tests across three suites: CSV escaping and file-writing (`csvLogger.test.js`), payload
 validation (`validation.test.js`), and the Express routes via supertest (`server.test.js`). The
 route tests mock `csvLogger` so the real telemetry log is never touched by a test run.
 
@@ -121,7 +125,25 @@ Every row in `user_behavior_logs.csv`:
 | `targetStep` | Step the user moved to (same as `currentStep` for `abandon` events) |
 | `action`     | One of `view`, `add_to_cart`, `purchase`, `abandon`       |
 | `deviceType` | `desktop`, `mobile`, or `tablet`, detected from the user agent |
+| `variant`    | `A` or `B` — the "Add to Cart" button A/B test group, fixed for the session |
 | `timestamp`  | ISO 8601 event time                                       |
+
+## A/B testing
+
+Every session is randomly assigned one of two variants for the product-detail page's commitment
+button, fixed for that session's lifetime:
+
+- **Variant A** — orange button, "Add to Cart"
+- **Variant B** — navy button, "Add to Bag"
+
+The variant travels with every telemetry event for that session (see the schema above) and is
+visible in the header's session badge on desktop (`variant A` / `variant B`) for manual testing.
+`analytics/ab_testing.py` runs a two-proportion z-test comparing checkout conversion between the
+two groups — implemented from scratch with `math.erf` rather than depending on `scipy` — and reports
+the observed rates, absolute difference, 95% confidence interval, z-statistic, and p-value. The
+simulator intentionally gives variant B a higher underlying conversion rate so there's a real,
+statistically significant effect to find when analyzing simulated data; see the comments in
+`simulator/simulate_traffic.js` for the exact probabilities used.
 
 ## Design notes
 
@@ -135,6 +157,8 @@ explanation of what the telemetry pipeline is recording underneath.
 ## Analytics notes
 
 `analytics/funnel_engine.py` collapses the raw per-event CSV into one row per session — deepest step
-reached, converted or not, device type — then `generate_report.py` turns that into a funnel chart, a
-device-conversion chart, an abandonment breakdown, and a markdown report that calls out the single
-biggest drop-off point. It's safe to re-run any time; it always reads the CSV fresh.
+reached, converted or not, device type, A/B variant — then `generate_report.py` turns that into a
+funnel chart, a device-conversion chart, an abandonment breakdown, an A/B test chart (via
+`analytics/ab_testing.py`), and a markdown report that calls out the single biggest drop-off point.
+It's safe to re-run any time; it always reads the CSV fresh. If the CSV predates the A/B test (no
+`variant` column), the A/B section is skipped automatically rather than erroring.

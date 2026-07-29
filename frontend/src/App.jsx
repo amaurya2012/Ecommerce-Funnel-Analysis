@@ -205,7 +205,7 @@ export default function App() {
         </p>
 
         <p className="data-label mt-4 text-center text-[9px] leading-relaxed sm:text-[11px]">
-          every transition streams to user_behavior_logs.csv for funnel analysis
+          Every transition streams to user_behavior_logs.csv for funnel analysis
         </p>
       </footer>
 
