@@ -136,7 +136,7 @@ export default function App() {
         onSearchChange={handleSearchChange}
         onCartClick={handleCartIconClick}
         onWishlistClick={handleWishlistIconClick}
-        onSignInClick={handleSignInClick} {/* Yeh prop yahan connect kiya hai */}
+        onSignInClick={handleSignInClick}
       />
 
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10 md:px-10">
