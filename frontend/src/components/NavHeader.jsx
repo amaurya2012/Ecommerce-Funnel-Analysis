@@ -22,7 +22,7 @@ export default function NavHeader({
         </span>
 
         <div className="hidden flex-1 items-center gap-2 rounded-full bg-white/10 px-4 py-2 sm:flex">
-          <Search size={15} strokeWidth={2} className="text-white/50" />
+          <Search size={10} strokeWidth={2} className="text-white/50" />
           <input
             value={searchQuery}
             onChange={(event) => onSearchChange(event.target.value)}
@@ -35,12 +35,7 @@ export default function NavHeader({
             </button>
           )}
         </div>
-
         <div className="ml-auto flex items-center gap-3 sm:gap-4">
-          <span className="data-label hidden rounded-full bg-white/10 px-3 py-1.5 text-white/60 lg:inline">
-            {deviceType} · {shortSession} · variant {variant}
-          </span>
-
           <div className="relative">
             <button
               type="button"
@@ -52,14 +47,12 @@ export default function NavHeader({
             </button>
             {accountOpen && (
               <div className="surface-card absolute right-0 top-8 z-40 w-48 p-3">
-                <p className="text-sm font-medium text-ink-high">Guest visitor</p>
-                <p className="mt-1 text-xs text-ink-low">Session {shortSession}</p>
                 <button
                   type="button"
                   onClick={() => setAccountOpen(false)}
                   className="mt-3 flex w-full items-center gap-1.5 rounded-full bg-paper px-3 py-1.5 text-xs font-medium text-ink-high"
                 >
-                  <LogIn size={12} strokeWidth={2} /> Sign in (demo only)
+                  <LogIn size={12} strokeWidth={2} /> Sign In
                 </button>
               </div>
             )}
