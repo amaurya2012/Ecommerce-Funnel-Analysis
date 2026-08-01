@@ -21,8 +21,8 @@ export default function NavHeader({
           AURELLE
         </span>
 
-        <div className="hidden flex-1 items-center gap-2 rounded-full bg-white/10 px-4 py-2 sm:flex">
-          <Search size={10} strokeWidth={2} className="text-white/50" />
+        <div className="hidden w-full max-w-xs items-center gap-2 rounded-full bg-white/10 px-4 py-2 sm:flex lg:max-w-sm">
+          <Search size={15} strokeWidth={2} className="text-white/50" />
           <input
             value={searchQuery}
             onChange={(event) => onSearchChange(event.target.value)}
