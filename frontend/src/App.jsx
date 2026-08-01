@@ -203,7 +203,7 @@ export default function App() {
         <p className="text-center text-xs font-medium text-ink-mid">
           AURELLE | © 2026 All Rights Reserved
         </p>
-
+        
       </footer>
 
       <InfoModal title="About AURELLE" isOpen={activeInfoPanel === 'about'} onClose={() => setActiveInfoPanel(null)}>

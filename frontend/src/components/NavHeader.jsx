@@ -36,17 +36,17 @@ export default function NavHeader({
           )}
         </div>
         <div className="ml-auto flex items-center gap-3 sm:gap-4">
-          <div className="relative">
+          <div className="relative flex items-center gap-3">
             <button
               type="button"
               onClick={() => setAccountOpen((open) => !open)}
               aria-label="Account"
-              className="text-white/80 transition-colors hover:text-white"
+              className="flex items-center text-white/80 transition-colors hover:text-white"
             >
               <User size={19} strokeWidth={1.75} />
             </button>
             {accountOpen && (
-              <div className="surface-card absolute right-0 top-8 z-40 w-48 p-3">
+              <div className="surface-card absolute right-0 top-8 z-40 w-48 p-3 shadow-lg">
                 <button
                   type="button"
                   onClick={() => setAccountOpen(false)}
@@ -76,7 +76,7 @@ export default function NavHeader({
             type="button"
             onClick={onCartClick}
             aria-label="View cart"
-            className="relative text-white/80 transition-colors hover:text-white"
+            className="relative flex items-center text-white/80 transition-colors hover:text-white"
           >
             <ShoppingBag size={19} strokeWidth={1.75} />
             {cartCount > 0 && (
