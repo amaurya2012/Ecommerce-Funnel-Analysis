@@ -105,6 +105,11 @@ export default function App() {
     setView(VIEWS.BROWSE);
   }
 
+  // --- NAYA FUNCTION YAHAN ADD KIYA GAYA HAI ---
+  function handleSignInClick() {
+    setToast({ visible: true, message: 'Sign in feature coming soon!' });
+  }
+
   function handleToggleWishlist(productId) {
     const product = getProductById(productId);
     setWishlist((prev) => {
@@ -131,6 +136,7 @@ export default function App() {
         onSearchChange={handleSearchChange}
         onCartClick={handleCartIconClick}
         onWishlistClick={handleWishlistIconClick}
+        onSignInClick={handleSignInClick} {/* Yeh prop yahan connect kiya hai */}
       />
 
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10 md:px-10">
@@ -203,7 +209,6 @@ export default function App() {
         <p className="text-center text-xs font-medium text-ink-mid">
           AURELLE | © 2026 All Rights Reserved
         </p>
-        
       </footer>
 
       <InfoModal title="About AURELLE" isOpen={activeInfoPanel === 'about'} onClose={() => setActiveInfoPanel(null)}>

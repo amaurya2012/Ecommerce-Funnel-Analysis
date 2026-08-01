@@ -9,6 +9,7 @@ export default function NavHeader({
   onSearchChange,
   onCartClick,
   onWishlistClick,
+  onSignInClick, // Prop add kiya gaya hai
 }) {
   const { sessionId, deviceType, variant } = useTelemetryContext();
   const [accountOpen, setAccountOpen] = useState(false);
@@ -16,7 +17,7 @@ export default function NavHeader({
 
   return (
     <header className="sticky top-0 z-30 bg-navy">
-      <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3.5 sm:px-6 sm:py-4 md:px-10">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3.5 sm:px-6 sm:py-4 md:px-10">
         <span className="font-display text-lg font-semibold tracking-[0.1em] text-white sm:text-xl">
           AURELLE
         </span>
@@ -35,8 +36,9 @@ export default function NavHeader({
             </button>
           )}
         </div>
+
         <div className="ml-auto flex items-center gap-3 sm:gap-4">
-          <div className="relative flex items-center gap-3">
+          <div className="relative flex items-center">
             <button
               type="button"
               onClick={() => setAccountOpen((open) => !open)}
@@ -49,8 +51,11 @@ export default function NavHeader({
               <div className="surface-card absolute right-0 top-8 z-40 w-48 p-3 shadow-lg">
                 <button
                   type="button"
-                  onClick={() => setAccountOpen(false)}
-                  className="mt-3 flex w-full items-center gap-1.5 rounded-full bg-paper px-3 py-1.5 text-xs font-medium text-ink-high"
+                  onClick={() => {
+                    setAccountOpen(false);
+                    if (onSignInClick) onSignInClick(); // Sign in trigger hoga
+                  }}
+                  className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full bg-paper px-3 py-1.5 text-xs font-medium text-ink-high"
                 >
                   <LogIn size={12} strokeWidth={2} /> Sign In
                 </button>
@@ -62,7 +67,7 @@ export default function NavHeader({
             type="button"
             onClick={onWishlistClick}
             aria-label="Wishlist"
-            className="relative text-white/80 transition-colors hover:text-white"
+            className="relative flex items-center text-white/80 transition-colors hover:text-white"
           >
             <Heart size={19} strokeWidth={1.75} fill={wishlistCount > 0 ? 'currentColor' : 'none'} />
             {wishlistCount > 0 && (
