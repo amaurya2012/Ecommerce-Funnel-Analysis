@@ -204,9 +204,6 @@ export default function App() {
           AURELLE | © 2026 All Rights Reserved
         </p>
 
-        <p className="data-label mt-4 text-center text-[9px] leading-relaxed sm:text-[11px]">
-          Every transition streams to user_behavior_logs.csv for funnel analysis
-        </p>
       </footer>
 
       <InfoModal title="About AURELLE" isOpen={activeInfoPanel === 'about'} onClose={() => setActiveInfoPanel(null)}>
